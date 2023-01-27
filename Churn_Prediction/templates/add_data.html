@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+
+<html
+  lang="en"
+  class="light-style customizer-hide"
+  dir="ltr"
+  data-theme="theme-default"
+  data-assets-path="../assets/"
+  data-template="vertical-menu-template-free"
+>
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"
+    />
+
+    <title>Add Data</title>
+
+    <meta name="description" content="" />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='assets/img/icons/logo.png') }}" />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Icons. Uncomment required icon fonts -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/vendor/fonts/boxicons.css') }}" />
+
+    <!-- Core CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/vendor/css/core.css') }}" class="template-customizer-core-css" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/vendor/css/theme-default.css') }}" class="template-customizer-theme-css" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/demo.css') }}" />
+
+    <!-- Vendors CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css') }}" />
+
+    <!-- Page CSS -->
+    <!-- Page -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/vendor/css/pages/page-auth.css') }}" />
+    <!-- Helpers -->
+    <script src="{{ url_for('static', filename='assets/vendor/js/helpers.js') }}"></script>
+
+    <!--! Template customizer & Theme config files MUST be included after core stylesheets and helpers.js in the <head> section -->
+    <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
+    <script src="{{ url_for('static', filename='assets/js/config.js') }}"></script>
+  </head>
+
+
+  <body onload="reset();">
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+      <script>
+        var messages = {{ messages | safe }};
+        for (var i=0; i<messages.length; i++) {
+          alert(messages[i]);
+        }
+      </script>
+      {% endif %}
+	  {% endwith %}
+
+    <!-- Layout wrapper -->
+    <div class="layout-wrapper layout-content-navbar">
+      <div class="layout-container">
+        <!-- Menu -->
+
+        <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
+          <div class="app-brand demo">
+              <img 
+                src="{{ url_for('static', filename='/assets/img/icons/logo.png') }}"
+                height="125"
+                width="125" />
+          </div>
+
+          <div class="menu-inner-shadow"></div>
+
+          <ul class="menu-inner py-1">
+            <!-- Dashboard -->
+            <li class="menu-item">
+              <a href="{{ url_for('dashboard') }}" class="menu-link">
+                <div data-i18n="Analytics">Dashboard</div>
+              </a>
+            </li>
+
+            <!-- Layouts -->
+
+            <li class="menu-header small text-uppercase">
+              <span class="menu-header-text">Insertion</span>
+            </li>
+            <li class="menu-item active">
+              <a href="{{ url_for('adddata') }}" class="menu-link">
+                <div data-i18n="Analytics">Data</div>
+              </a>
+            </li>
+
+            {% if role == "Admin" %}
+            <li class="menu-item">
+              <a href="{{ url_for('register') }}" class="menu-link">
+                <div data-i18n="Analytics">User</div>
+              </a>
+            </li>
+            {% endif %}
+            
+            <li class="menu-header small text-uppercase">
+              <span class="menu-header-text">Predict</span>
+            </li>
+            <li class="menu-item">
+              <a href="{{ url_for('predict') }}" class="menu-link">
+                <div data-i18n="Analytics">Churn</div>
+              </a>
+            </li>
+          </ul>
+        </aside>
+        <!-- / Menu -->
+
+        <!-- Layout container -->
+        <div class="layout-page">
+          <!-- Navbar -->
+
+          <nav
+            class="layout-navbar container-xxl navbar navbar-expand-xl navbar-detached align-items-center bg-navbar-theme"
+            id="layout-navbar"
+          >
+
+            <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
+              <!-- Search -->
+              <!-- /Search -->
+
+              <ul class="navbar-nav flex-row align-items-center ms-auto">
+                <!-- Place this tag where you want the button to render. -->
+
+                <!-- User -->
+                <li class="nav-item navbar-dropdown dropdown-user dropdown">
+                  <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
+                    <div class="avatar avatar-online">
+                      <img src="{{ url_for('static', filename='/assets/img/avatars/1.png') }}" alt class="w-px-40 h-auto rounded-circle" />
+                    </div>
+                  </a>
+                  <ul class="dropdown-menu dropdown-menu-end">
+                    <li>
+                      <a class="dropdown-item" href="#">
+                        <div class="d-flex">
+                          <div class="flex-shrink-0 me-3">
+                            <div class="avatar avatar-online">
+                              <img src="{{ url_for('static', filename='/assets/img/avatars/1.png') }}" alt class="w-px-40 h-auto rounded-circle" />
+                            </div>
+                          </div>
+                          <div class="flex-grow-1">
+                            <span class="fw-semibold d-block">{{ uname }}</span>
+                            <small class="text-muted">{{ role }}</small>
+                          </div>
+                        </div>
+                      </a>
+                    </li>
+                    <li>
+                      <div class="dropdown-divider"></div>
+                    </li>
+                    <li>
+                      <a class="dropdown-item" href="{{ url_for('logout') }}">
+                        <i class="bx bx-power-off me-2"></i>
+                        <span class="align-middle">Log Out</span>
+                      </a>
+                    </li>
+                  </ul>
+                </li>
+                <!--/ User -->
+              </ul>
+            </div>
+          </nav>
+
+          <!-- / Navbar -->
+
+          <!-- Content wrapper -->
+          <div class="content-wrapper">
+            <!-- Content -->
+
+            <div class="container-xxl flex-grow-1 container-p-y">
+              <div class="row">
+                <!-- Register Card -->
+                  <div class="card">
+                    <div class="card-body">
+                      <!-- Logo -->
+                      <form id="formAuthentication" class="mb-3" action="{{ url_for('adddata') }}" method="POST">
+                        <div class="mb-3">
+                          <label for="vintage" class="form-label">Vintage</label>
+                          <input
+                            type="number"
+                            class="form-control"
+                            id="vintage"
+                            name="vintage"
+                            placeholder="Enter vintage"
+                            required="required"
+                            autofocus
+                          />
+                        </div>
+                        
+                        <div class="mb-3">
+                          <label for="age" class="form-label">Age</label>
+                          <input
+                            type="number"
+                            class="form-control"
+                            id="age"
+                            name="age"
+                            placeholder="Enter age"
+                            required="required"
+                          />
+                        </div>
+
+                        <div class="mb-3">
+                          <label for="gender" class="form-label">Gender</label>
+                          <select class="form-control" id="gender" name="gender" placeholder="Select gender">
+                            <option>Male</option>
+                            <option>Female</option>
+                          </select>
+                        </div>
+
+                        <div class="mb-3">
+                          <label for="dependents" class="form-label">Dependents</label>
+                          <input
+                            type="number"
+                            class="form-control"
+                            id="dependents"
+                            name="dependents"
+                            placeholder="Enter dependents"
+                            required="required"
+                          />
+                        </div>
+
+                        <div class="mb-3">
+                          <label for="occupation" class="form-label">Occupation</label>
+                          <select class="form-control" id="occupation" name="occupation" placeholder="Select occupation">
+                            <option>self_employed</option>
+                            <option>salaried</option>
+                            <option>retired</option>
+                            <option>student</option>
+                          </select>
+                        </div>
+
+                        <div class="mb-3">
+                          <label for="city" class="form-label">City</label>
+                          <input
+                            type="number"
+                            class="form-control"
+                            id="city"
+                            name="city"
+                            placeholder="Enter city"
+                            required="required"
+                          />
+                        </div>
+
+                        <div class="mb-3">
+                          <label for="customer_nw_category" class="form-label">Customer NW Category</label>
+                          <input
+                            type="number"
+                            class="form-control"
+                            id="customer_nw_category"
+                            name="customer_nw_category"
+                            placeholder="Enter customer nw category"
+                            required="required"
+                          />
+                        </div>
+
+                        <div class="mb-3">
+                          <label for="branch_code" class="form-label">Branch Code</label>
+                          <input
+                            type="number"
+                            class="form-control"
+                            id="branch_code"
+                            name="branch_code"
+                            placeholder="Enter branch code"
+                            required="required"
+                          />
+                        </div>
+
+                        <div class="mb-3">
+                          <label for="days_since_last_transaction" class="form-label">Days Since Last Transaction</label>
+                          <input
+                            type="number"
+                            class="form-control"
+                            id="days_since_last_transaction"
+                            name="days_since_last_transaction"
+                            placeholder="Enter days since last transaction"
+                            required="required"
+                          />
+                        </div>
+
+                        <div class="mb-3">
+                          <label for="current_balance" class="form-label">Current Balance</label>
+                          <input
+                            type="number"
+                            class="form-control"
+                            id="current_balance"
+                            name="current_balance"
+                            step=any
+                            placeholder="Enter current balance"
+                            required="required"
+                          />
+                        </div>
+
+                        <div class="mb-3">
+                          <label for="previous_month_end_balance" class="form-label">Previous Month End Balance</label>
+                          <input
+                            type="number"
+                            class="form-control"
+                            id="previous_month_end_balance"
+                            name="previous_month_end_balance"
+                            step=any
+                            placeholder="Enter customer previous month end balance"
+                            required="required"
+                          />
+                        </div>
+
+                        <div class="mb-3">
+                          <label for="average_monthly_balance_prevQ" class="form-label">Average Monthly Balance PrevQ</label>
+                          <input
+                            type="number"
+                            class="form-control"
+                            id="average_monthly_balance_prevQ"
+                            name="average_monthly_balance_prevQ"
+                            step=any
+                            placeholder="Enter customer average monthly balance prevQ"
+                            required="required"
+                          />
+                        </div>
+
+                        <div class="mb-3">
+                          <label for="average_monthly_balance_prevQ2" class="form-label">Average Monthly Balance PrevQ2</label>
+                          <input
+                            type="number"
+                            class="form-control"
+                            id="average_monthly_balance_prevQ2"
+                            name="average_monthly_balance_prevQ2"
+                            step=any
+                            placeholder="Enter customer average monthly balance prevQ2"
+                            required="required"
+                          />
+                        </div>
+
+                        <div class="mb-3">
+                          <label for="current_month_credit" class="form-label">Current Month Credit</label>
+                          <input
+                            type="number"
+                            class="form-control"
+                            id="current_month_credit"
+                            name="current_month_credit"
+                            step=any
+                            placeholder="Enter customer current month credit"
+                            required="required"
+                          />
+                        </div>
+
+                        <div class="mb-3">
+                          <label for="previous_month_credit" class="form-label">Previous Month Credit</label>
+                          <input
+                            type="number"
+                            class="form-control"
+                            id="previous_month_credit"
+                            name="previous_month_credit"
+                            step=any
+                            placeholder="Enter customer previous month credit"
+                            required="required"
+                          />
+                        </div>
+
+                        <div class="mb-3">
+                          <label for="current_month_debit" class="form-label">Current Month Debit</label>
+                          <input
+                            type="number"
+                            class="form-control"
+                            id="current_month_debit"
+                            name="current_month_debit"
+                            step=any
+                            placeholder="Enter customer current month debit"
+                            required="required"
+                          />
+                        </div>
+
+                        <div class="mb-3">
+                          <label for="previous_month_debit" class="form-label">Previous Month Debit</label>
+                          <input
+                            type="number"
+                            class="form-control"
+                            id="previous_month_debit"
+                            name="previous_month_debit"
+                            step=any
+                            placeholder="Enter customer previous month debit"
+                            required="required"
+                          />
+                        </div>
+
+                        <div class="mb-3">
+                          <label for="current_month_balance" class="form-label">Current Month Balance</label>
+                          <input
+                            type="number"
+                            class="form-control"
+                            id="current_month_balance"
+                            name="current_month_balance"
+                            step=any
+                            placeholder="Enter customer current month balance"
+                            required="required"
+                          />
+                        </div>
+
+                        <div class="mb-3">
+                          <label for="previous_month_balance" class="form-label">Previous Month Balance</label>
+                          <input
+                            type="number"
+                            class="form-control"
+                            id="previous_month_balance"
+                            name="previous_month_balance"
+                            step=any
+                            placeholder="Enter customer previous month balance"
+                            required="required"
+                          />
+                        </div>
+                        
+                        <div class="mb-3">
+                          <label for="churn" class="form-label">Churn</label>
+                          <select class="form-control" id="churn" name="churn" placeholder="Select Churn">
+                            <option value="1">Yes</option>
+                            <option value="0">No</option>
+                          </select>
+                        </div>
+      
+                        <button class="btn btn-primary d-grid w-100">Add Data</button>
+                      </form>
+                    </div>
+                  </div>
+                <!-- Register Card -->
+              </div>
+            </div>
+            <!-- / Content -->
+
+            <!-- Footer -->
+            <footer class="content-footer footer bg-footer-theme">
+              <div class="container-xxl d-flex flex-wrap justify-content-between py-2 flex-md-row flex-column">
+                <div class="mb-2 mb-md-0">
+                  ©
+                  <script>
+                    document.write(new Date().getFullYear());
+                  </script>
+                  , made with ❤️ by Black Bulls
+                </div>
+              </div>
+            </footer>
+            <!-- / Footer -->
+
+            <div class="content-backdrop fade"></div>
+          </div>
+          <!-- Content wrapper -->
+        </div>
+        <!-- / Layout page -->
+      </div>
+
+      <!-- Overlay -->
+      <div class="layout-overlay layout-menu-toggle"></div>
+    </div>
+    <!-- / Layout wrapper -->
+
+    <!-- Core JS -->
+    <!-- build:js assets/vendor/js/core.js -->
+    <script src="{{ url_for('static', filename='/assets/vendor/libs/jquery/jquery.js') }}"></script>
+    <script src="{{ url_for('static', filename='/assets/vendor/libs/popper/popper.js') }}"></script>
+    <script src="{{ url_for('static', filename='/assets/vendor/js/bootstrap.js') }}"></script>
+    <script src="{{ url_for('static', filename='/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js') }}"></script>
+
+    <script src="{{ url_for('static', filename='/assets/vendor/js/menu.js') }}"></script>
+    <!-- endbuild -->
+
+    <!-- Vendors JS -->
+    <script src="{{ url_for('static', filename='/assets/vendor/libs/apex-charts/apexcharts.js') }}"></script>
+
+    <!-- Main JS -->
+    <script src="{{ url_for('static', filename='/assets/js/main.js') }}"></script>
+
+    <!-- Page JS -->
+    <script src="{{ url_for('static', filename='/assets/js/dashboards-analytics.js') }}"></script>
+
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+  </body>
+</html>
